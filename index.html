@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gensyn: Decentralized AI Compute</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Harmony -->
@@ -67,9 +68,9 @@
 </head>
 <body class="bg-neutral-50 text-neutral-800">
 
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-neutral-200">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+    <header id="main-header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-neutral-200 h-16">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between items-center h-full">
                 <div class="flex-shrink-0">
                     <h1 class="text-2xl font-bold text-blue-600">Gensyn</h1>
                 </div>
@@ -83,7 +84,7 @@
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="text-neutral-600 hover:text-blue-600">
+                    <button id="mobile-menu-btn" class="text-neutral-600 hover:text-blue-600 p-2">
                         <span class="sr-only">Open main menu</span>
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path>
@@ -92,7 +93,7 @@
                 </div>
             </div>
         </nav>
-        <div id="mobile-menu" class="md:hidden hidden">
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-neutral-200">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#what" class="nav-link block">What is Gensyn?</a>
                 <a href="#problem" class="nav-link block">The Problem</a>
@@ -165,7 +166,6 @@
                     <div id="role-verifier" class="role-diagram-item md:col-start-5">Verifier / Whistleblower</div>
                 </div>
 
-                <!-- Single, centralized description box for clarity -->
                 <div id="role-description-container" class="mt-6 bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
                     <div class="role-description-panel active" id="desc-initial">
                         <p class="text-center font-medium text-neutral-600">Click on any role above to see a detailed description of its responsibilities and incentives within the Gensyn network.</p>
@@ -262,207 +262,4 @@
                     <h3 class="text-xl font-bold text-blue-600 mb-2">a16z Crypto</h3>
                     <p class="text-neutral-600 font-semibold">Lead Investor (Series A)</p>
                 </div>
-            </div>
-            <div class="bg-blue-600 text-white p-8 rounded-lg shadow-xl text-center">
-                <h3 class="text-2xl font-bold mb-4">The Gensyn Testnet is Live</h3>
-                <p class="text-blue-100 text-lg mb-6">
-                    You can participate in the testnet by contributing compute power. Early contributors to Web3 protocols are often rewarded with airdrops or other benefits when the main network launches.
-                </p>
-                <a href="https://docs.gensyn.ai/" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-neutral-100 transition-all duration-200">
-                    Learn More & Join
-                </a>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-white border-t border-neutral-200 mt-16">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-neutral-500">
-            <p>This is an interactive report based on publicly available information about the Gensyn project. Not financial advice.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            /* --- Chart.js Initialization --- */
-
-            const costCtx = document.getElementById('costChart').getContext('2d');
-            new Chart(costCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Centralized Cloud (e.g., AWS, GCP)', 'Gensyn (Projected)'],
-                    datasets: [{
-                        label: 'Relative Cost of AI Training',
-                        data: [100, 25],
-                        backgroundColor: [
-                            'rgba(220, 38, 38, 0.6)',
-                            'rgba(37, 99, 235, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(220, 38, 38, 1)',
-                            'rgba(37, 99, 235, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) { return value + '%' }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const sourcesCtx = document.getElementById('sourcesChart').getContext('2d');
-            new Chart(sourcesCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Latent Data Centers', 'Crypto Miners', 'Gaming Rigs', 'Personal Laptops/Other'],
-                    datasets: [{
-                        label: 'Potential Compute Sources',
-                        data: [40, 30, 20, 10],
-                        backgroundColor: [
-                            'rgba(37, 99, 235, 0.8)',
-                            'rgba(20, 184, 166, 0.8)',
-                            'rgba(234, 179, 8, 0.8)',
-                            'rgba(107, 114, 128, 0.8)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        }
-                    }
-                }
-            });
-
-            /* --- Navigation & Scroll Logic (Fixed) --- */
-
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            const allNavLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
-            const sections = document.querySelectorAll('.content-section');
-            const headerHeight = 64; 
-
-            // Handle smooth scroll and close mobile menu
-            allNavLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    
-                    if (targetElement) {
-                        const targetPosition = targetElement.offsetTop - headerHeight; 
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                    if (mobileMenu) mobileMenu.classList.add('hidden');
-                });
-            });
-
-            function updateActiveLink() {
-                let current = '';
-                sections.forEach(section => {
-                    // Check if section top position is just above the sticky header
-                    const sectionTop = section.offsetTop;
-                    if (window.scrollY >= sectionTop - headerHeight - 10) { 
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                allNavLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').includes(current)) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-
-            window.addEventListener('scroll', updateActiveLink);
-            updateActiveLink(); 
-
-            /* --- Core Technologies Toggles Logic (Fixed) --- */
-
-            const techToggles = document.getElementById('tech-toggles');
-            const techPanels = document.querySelectorAll('#tech-content .tech-panel');
-            
-            techToggles.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.tagName === 'BUTTON') {
-                    const targetId = target.dataset.target;
-                    
-                    // Update button active state
-                    Array.from(techToggles.children).forEach(btn => {
-                        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
-                        btn.classList.add('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
-                    });
-                    
-                    target.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
-                    target.classList.remove('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
-                    
-                    // Update panel visibility
-                    techPanels.forEach(panel => {
-                        if (panel.id === targetId) {
-                            panel.classList.remove('hidden');
-                        } else {
-                            panel.classList.add('hidden');
-                        }
-                    });
-                }
-            });
-            
-            /* --- Participant Workflow Logic (Fixed) --- */
-
-            const roleItems = document.querySelectorAll('.role-diagram-item');
-            const roleDescriptionPanels = document.querySelectorAll('.role-description-panel');
-
-            roleItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const targetRole = item.id.split('-')[1]; // e.g., 'submitter'
-                    const targetDescId = 'desc-' + targetRole; 
-                    const targetPanel = document.getElementById(targetDescId);
-                    
-                    const isActive = item.classList.contains('active');
-
-                    // If already active, deactivate and show initial message
-                    if (isActive) {
-                        roleItems.forEach(i => i.classList.remove('active'));
-                        roleDescriptionPanels.forEach(d => d.classList.remove('active'));
-                        document.getElementById('desc-initial').classList.add('active');
-                        return;
-                    }
-
-                    // Deactivate all
-                    roleItems.forEach(i => i.classList.remove('active'));
-                    roleDescriptionPanels.forEach(d => d.classList.remove('active'));
-
-                    // Activate selected
-                    item.classList.add('active');
-                    targetPanel.classList.add('active');
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+           
