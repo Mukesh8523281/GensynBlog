@@ -39,7 +39,8 @@
             @apply bg-white p-4 rounded-lg shadow-md border border-neutral-200;
         }
         .content-section {
-            @apply pt-20 -mt-16;
+            /* Adjusted padding to account for the fixed header height (h-16 or 4rem) plus extra margin */
+            @apply pt-20 -mt-16; 
         }
         .tech-toggle {
             @apply px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all;
@@ -54,12 +55,12 @@
             @apply bg-white p-4 rounded-lg shadow-sm border border-neutral-200 text-center cursor-pointer hover:shadow-lg hover:border-blue-400 transition-all duration-200;
         }
         .role-diagram-item.active {
-            @apply border-blue-600 ring-2 ring-blue-300;
+            @apply border-blue-600 ring-2 ring-blue-300 shadow-md;
         }
-        .role-description {
+        .role-description-panel {
             @apply hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
         }
-        .role-description.active {
+        .role-description-panel.active {
             @apply block;
         }
     </style>
@@ -107,7 +108,7 @@
         <section id="what" class="content-section mb-16">
             <h2 class="text-3xl font-bold text-neutral-900 mb-4">What is Gensyn?</h2>
             <p class="text-lg text-neutral-600 mb-8">
-                Gensyn is a Layer-1 blockchain protocol designed to create a global, decentralized "supercluster" for artificial intelligence (AI) computation. It sits at the intersection of Web3 and AI, aiming to unite the world's untapped computing power—from large data centers to personal gaming rigs—into a single, open network accessible to anyone, anytime.
+                Gensyn is a **Layer-1 blockchain protocol** designed to create a global, decentralized "supercluster" for artificial intelligence (AI) computation. It sits at the intersection of Web3 and AI, aiming to unite the world's untapped computing power—from large data centers to personal gaming rigs—into a single, open network accessible to anyone, anytime.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="metric-card">
@@ -156,24 +157,30 @@
                 <p class="text-neutral-600 mb-6">Click on each role to understand its function in the network.</p>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
                     <div id="role-submitter" class="role-diagram-item">Submitter</div>
-                    <div class="text-center font-bold text-blue-600 text-2xl">→</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl hidden md:block">→</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl block md:hidden">↓</div>
                     <div id="role-solver" class="role-diagram-item">Solver</div>
-                    <div class="text-center font-bold text-blue-600 text-2xl">←</div>
-                    <div id="role-verifier" class="role-diagram-item">Verifier / Whistleblower</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl hidden md:block">←</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl block md:hidden">↓</div>
+                    <div id="role-verifier" class="role-diagram-item md:col-start-5">Verifier / Whistleblower</div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center mt-4">
-                    <div class="role-description" id="desc-submitter">
-                        <strong>Submitters</strong> are the developers or researchers. They need computational power and submit their AI training tasks to the network, along with payment.
+
+                <!-- Single, centralized description box for clarity -->
+                <div id="role-description-container" class="mt-6 bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
+                    <div class="role-description-panel active" id="desc-initial">
+                        <p class="text-center font-medium text-neutral-600">Click on any role above to see a detailed description of its responsibilities and incentives within the Gensyn network.</p>
                     </div>
-                    <div class="md:col-start-3">
-                        <div class="role-description" id="desc-solver">
-                            <strong>Solvers</strong> are the compute providers. They rent their hardware (e.g., GPUs) to the network, execute the training tasks, and provide the results to earn token rewards.
-                        </div>
+                    <div class="role-description-panel" id="desc-submitter">
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Submitter: The Client</h4>
+                        <p class="text-neutral-700"><strong>Submitters</strong> are the developers or researchers. They are the demand side of the network. They package their AI model training tasks (like a large language model fine-tuning job) and submit them to the protocol, along with the required payment (in Gensyn tokens) for the compute providers.</p>
                     </div>
-                    <div class="md:col-start-5">
-                        <div class="role-description" id="desc-verifier">
-                            <strong>Verifiers & Whistleblowers</strong> check the work submitted by Solvers. They run checks to catch errors or dishonest work. If they find a problem and prove it, they earn a reward, and the Solver is penalized. This keeps the network honest.
-                        </div>
+                    <div class="role-description-panel" id="desc-solver">
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Solver: The Compute Provider</h4>
+                        <p class="text-neutral-700"><strong>Solvers</strong> are the supply side, contributing their underutilized hardware (GPUs, TPUs). They accept a submitted task, execute the deep learning computation off-chain, and provide the results back to the network. Upon successful verification, they receive the token rewards as payment for their compute time.</p>
+                    </div>
+                    <div class="role-description-panel" id="desc-verifier">
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Verifier / Whistleblower: The Integrity Check</h4>
+                        <p class="text-neutral-700">These participants monitor the work. **Verifiers** perform lightweight, probabilistic checks to ensure the Solvers' computations are accurate. **Whistleblowers** identify and report bad behavior. If they successfully prove a Solver submitted incorrect work, the Verifier/Whistleblower is rewarded, and the dishonest Solver is penalized through staked collateral. This creates the trustless incentive mechanism.</p>
                     </div>
                 </div>
             </div>
@@ -190,12 +197,12 @@
                     <div id="tech-content">
                         <div id="tech-verde" class="tech-panel">
                             <h4 class="text-lg font-semibold text-blue-600 mb-2">Verde: Probabilistic Proof-of-Learning</h4>
-                            <p class="text-neutral-700">This is Gensyn's verification system. Instead of re-running an entire, expensive AI model to check it, Verde uses a probabilistic method combined with a Truebit-style "dispute resolution game." Verifiers can cheaply check the work, and if they find an error, they can challenge the Solver. The protocol then efficiently pinpoints the exact point of disagreement to determine who is correct, ensuring trust without wasting compute.
+                            <p class="text-neutral-700">This is Gensyn's verification system. Instead of re-running an entire, expensive AI model to check it, Verde uses a probabilistic method combined with a Truebit-style "dispute resolution game." Verifiers can cheaply check the work, and if they find an error, they can challenge the Solver. The protocol then efficiently pinpoints the exact step of disagreement to determine who is correct, ensuring trust without wasting compute.
                             </p>
                         </div>
                         <div id="tech-repops" class="tech-panel hidden">
                             <h4 class="text-lg font-semibold text-blue-600 mb-2">RepOps: Reproducible Operators</h4>
-                            <p class="text-neutral-700">A key problem in distributed computing is that different hardware (e.g., an Nvidia A100 vs. an H100 GPU) can produce tiny, different results for the same calculation. RepOps is a software library that fixes the order of operations, ensuring that any device running the task produces the *exact same* bit-for-bit result. This is essential for the verification system to work, as it needs a single, reproducible "correct" answer to check against.
+                            <p class="text-neutral-700">A key problem in distributed computing is that different hardware (e.g., an Nvidia A100 vs. an H100 GPU) can produce tiny, different results for the same calculation. RepOps is a software library that fixes the order of floating-point operations, ensuring that any device running the task produces the *exact same* bit-for-bit result. This **determinism** is essential for the verification system to work, as it needs a single, reproducible "correct" answer to check against.
                             </p>
                         </div>
                         <div id="tech-comms" class="tech-panel hidden">
@@ -277,6 +284,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            
+            /* --- Chart.js Initialization --- */
+
             const costCtx = document.getElementById('costChart').getContext('2d');
             new Chart(costCtx, {
                 type: 'bar',
@@ -284,4 +294,175 @@
                     labels: ['Centralized Cloud (e.g., AWS, GCP)', 'Gensyn (Projected)'],
                     datasets: [{
                         label: 'Relative Cost of AI Training',
-                        data: [100,
+                        data: [100, 25],
+                        backgroundColor: [
+                            'rgba(220, 38, 38, 0.6)',
+                            'rgba(37, 99, 235, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(220, 38, 38, 1)',
+                            'rgba(37, 99, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return value + '%' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const sourcesCtx = document.getElementById('sourcesChart').getContext('2d');
+            new Chart(sourcesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Latent Data Centers', 'Crypto Miners', 'Gaming Rigs', 'Personal Laptops/Other'],
+                    datasets: [{
+                        label: 'Potential Compute Sources',
+                        data: [40, 30, 20, 10],
+                        backgroundColor: [
+                            'rgba(37, 99, 235, 0.8)',
+                            'rgba(20, 184, 166, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(107, 114, 128, 0.8)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+
+            /* --- Navigation & Scroll Logic (Fixed) --- */
+
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const allNavLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
+            const sections = document.querySelectorAll('.content-section');
+            const headerHeight = 64; 
+
+            // Handle smooth scroll and close mobile menu
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        const targetPosition = targetElement.offsetTop - headerHeight; 
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                    if (mobileMenu) mobileMenu.classList.add('hidden');
+                });
+            });
+
+            function updateActiveLink() {
+                let current = '';
+                sections.forEach(section => {
+                    // Check if section top position is just above the sticky header
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= sectionTop - headerHeight - 10) { 
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                allNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink(); 
+
+            /* --- Core Technologies Toggles Logic (Fixed) --- */
+
+            const techToggles = document.getElementById('tech-toggles');
+            const techPanels = document.querySelectorAll('#tech-content .tech-panel');
+            
+            techToggles.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.tagName === 'BUTTON') {
+                    const targetId = target.dataset.target;
+                    
+                    // Update button active state
+                    Array.from(techToggles.children).forEach(btn => {
+                        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+                        btn.classList.add('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
+                    });
+                    
+                    target.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+                    target.classList.remove('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
+                    
+                    // Update panel visibility
+                    techPanels.forEach(panel => {
+                        if (panel.id === targetId) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+            
+            /* --- Participant Workflow Logic (Fixed) --- */
+
+            const roleItems = document.querySelectorAll('.role-diagram-item');
+            const roleDescriptionPanels = document.querySelectorAll('.role-description-panel');
+
+            roleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetRole = item.id.split('-')[1]; // e.g., 'submitter'
+                    const targetDescId = 'desc-' + targetRole; 
+                    const targetPanel = document.getElementById(targetDescId);
+                    
+                    const isActive = item.classList.contains('active');
+
+                    // If already active, deactivate and show initial message
+                    if (isActive) {
+                        roleItems.forEach(i => i.classList.remove('active'));
+                        roleDescriptionPanels.forEach(d => d.classList.remove('active'));
+                        document.getElementById('desc-initial').classList.add('active');
+                        return;
+                    }
+
+                    // Deactivate all
+                    roleItems.forEach(i => i.classList.remove('active'));
+                    roleDescriptionPanels.forEach(d => d.classList.remove('active'));
+
+                    // Activate selected
+                    item.classList.add('active');
+                    targetPanel.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
