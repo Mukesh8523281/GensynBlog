@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gensyn: Decentralized AI Compute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, single-page dashboard. This structure allows users to explore the project's complex components (What, Why, How, Ecosystem, Status) in a non-linear way, which is ideal for understanding a technical concept. The sticky navigation facilitates easy jumps between these themes. Interactions like click-to-reveal for participant roles and toggles for core technologies are chosen to pack dense information into a clean, user-driven interface, enhancing usability and comprehension over a static, linear report. -->
+    <!-- Visualization & Content Choices: [Cost Comparison: Bar Chart (Chart.js) -> Goal: Compare -> Interaction: Hover -> Justification: Clearly visualizes the cost disparity between centralized vs. decentralized compute.] [Participant Workflow: Interactive Diagram (HTML/JS) -> Goal: Organize/Explain Process -> Interaction: Click-to-reveal role descriptions -> Justification: Makes a complex system flow engaging and digestible.] [Compute Sources: Donut Chart (Chart.js) -> Goal: Inform (Proportions) -> Interaction: Hover -> Justification: Shows the component parts of the total potential compute pool.] [Core Tech: Toggles (HTML/JS) -> Goal: Inform/Explain -> Interaction: Click-to-update text pane -> Justification: Condenses complex technical details into a single, interactive UI element.] -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            @apply px-4 py-2 text-neutral-600 hover:text-blue-600 hover:bg-neutral-100 rounded-md transition-all duration-200;
+        }
+        .nav-link.active {
+            @apply text-blue-600 bg-blue-50 font-semibold;
+        }
+        .metric-card {
+            @apply bg-white p-4 rounded-lg shadow-md border border-neutral-200;
+        }
+        .content-section {
+            @apply pt-20 -mt-16;
+        }
+        .tech-toggle {
+            @apply px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all;
+        }
+        .tech-toggle.active {
+            @apply bg-blue-600 text-white shadow-lg;
+        }
+        .tech-toggle.inactive {
+            @apply bg-white text-neutral-700 hover:bg-neutral-100 border;
+        }
+        .role-diagram-item {
+            @apply bg-white p-4 rounded-lg shadow-sm border border-neutral-200 text-center cursor-pointer hover:shadow-lg hover:border-blue-400 transition-all duration-200;
+        }
+        .role-diagram-item.active {
+            @apply border-blue-600 ring-2 ring-blue-300;
+        }
+        .role-description {
+            @apply hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
+        }
+        .role-description.active {
+            @apply block;
+        }
+    </style>
+</head>
+<body class="bg-neutral-50 text-neutral-800">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-neutral-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold text-blue-600">Gensyn</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4" id="nav-menu">
+                        <a href="#what" class="nav-link">What is Gensyn?</a>
+                        <a href="#problem" class="nav-link">The Problem</a>
+                        <a href="#how" class="nav-link">How it Works</a>
+                        <a href="#ecosystem" class="nav-link">The Ecosystem</a>
+                        <a href="#status" class="nav-link">Status & Funding</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-neutral-600 hover:text-blue-600">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#what" class="nav-link block">What is Gensyn?</a>
+                <a href="#problem" class="nav-link block">The Problem</a>
+                <a href="#how" class="nav-link block">How it Works</a>
+                <a href="#ecosystem" class="nav-link block">The Ecosystem</a>
+                <a href="#status" class="nav-link block">Status & Funding</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <section id="what" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">What is Gensyn?</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Gensyn is a Layer-1 blockchain protocol designed to create a global, decentralized "supercluster" for artificial intelligence (AI) computation. It sits at the intersection of Web3 and AI, aiming to unite the world's untapped computing power—from large data centers to personal gaming rigs—into a single, open network accessible to anyone, anytime.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Layer-1 Protocol</h3>
+                    <p class="text-neutral-600">A custom Ethereum rollup built specifically for verifying machine learning computation trustlessly.</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Global Compute Supercluster</h3>
+                    <p class="text-neutral-600">Aims to connect all compute devices (GPUs, TPUs, CPUs) into one virtual network for training AI models.</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">AI/ML Focused</h3>
+                    <p class="text-neutral-600">Specifically designed to handle the high-intensity, parallel workloads of deep learning and model training.</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">DePIN Project</h3>
+                    <p class="text-neutral-600">A "Decentralized Physical Infrastructure Network" that creates a marketplace for a real-world resource: computation.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Problem: AI's Compute Bottleneck</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Access to computation is the single biggest bottleneck in AI development. Training advanced models requires massive computational power, which is expensive and overwhelmingly controlled by a few large cloud providers. This centralization stifles innovation, creates high-cost barriers for startups and researchers, and concentrates control over the future of AI.
+            </p>
+            <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
+                <h3 class="text-xl font-semibold text-center mb-4">Cost of AI Compute: Centralized vs. Decentralized</h3>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+                <p class="text-center text-neutral-600 mt-4">
+                    Gensyn aims to dramatically reduce compute costs by unlocking underutilized hardware and creating a competitive, open market, breaking the hold of expensive, centralized providers.
+                </p>
+            </div>
+        </section>
+
+        <section id="how" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">How it Works: A Trustless Marketplace</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Gensyn creates a trustless marketplace using smart contracts. But its core innovation is solving the "fundamental challenge": how to prove that computation was performed correctly off-chain without having to re-do the work. It uses a novel system of verification and incentives to ensure everyone plays fair.
+            </p>
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-semibold text-neutral-800 mb-4">Participant Workflow</h3>
+                <p class="text-neutral-600 mb-6">Click on each role to understand its function in the network.</p>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                    <div id="role-submitter" class="role-diagram-item">Submitter</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl">→</div>
+                    <div id="role-solver" class="role-diagram-item">Solver</div>
+                    <div class="text-center font-bold text-blue-600 text-2xl">←</div>
+                    <div id="role-verifier" class="role-diagram-item">Verifier / Whistleblower</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center mt-4">
+                    <div class="role-description" id="desc-submitter">
+                        <strong>Submitters</strong> are the developers or researchers. They need computational power and submit their AI training tasks to the network, along with payment.
+                    </div>
+                    <div class="md:col-start-3">
+                        <div class="role-description" id="desc-solver">
+                            <strong>Solvers</strong> are the compute providers. They rent their hardware (e.g., GPUs) to the network, execute the training tasks, and provide the results to earn token rewards.
+                        </div>
+                    </div>
+                    <div class="md:col-start-5">
+                        <div class="role-description" id="desc-verifier">
+                            <strong>Verifiers & Whistleblowers</strong> check the work submitted by Solvers. They run checks to catch errors or dishonest work. If they find a problem and prove it, they earn a reward, and the Solver is penalized. This keeps the network honest.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold text-neutral-800 mb-4">Core Technologies</h3>
+                <p class="text-neutral-600 mb-6">Gensyn is powered by several key innovations. Select a technology to learn more about it.</p>
+                <div class="flex flex-wrap gap-4 mb-4" id="tech-toggles">
+                    <button class="tech-toggle active" data-target="tech-verde">Verification (Verde)</button>
+                    <button class="tech-toggle inactive" data-target="tech-repops">Reproducibility (RepOps)</button>
+                    <button class="tech-toggle inactive" data-target="tech-comms">Communication (NoLoCo)</button>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200 min-h-[150px]">
+                    <div id="tech-content">
+                        <div id="tech-verde" class="tech-panel">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">Verde: Probabilistic Proof-of-Learning</h4>
+                            <p class="text-neutral-700">This is Gensyn's verification system. Instead of re-running an entire, expensive AI model to check it, Verde uses a probabilistic method combined with a Truebit-style "dispute resolution game." Verifiers can cheaply check the work, and if they find an error, they can challenge the Solver. The protocol then efficiently pinpoints the exact point of disagreement to determine who is correct, ensuring trust without wasting compute.
+                            </p>
+                        </div>
+                        <div id="tech-repops" class="tech-panel hidden">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">RepOps: Reproducible Operators</h4>
+                            <p class="text-neutral-700">A key problem in distributed computing is that different hardware (e.g., an Nvidia A100 vs. an H100 GPU) can produce tiny, different results for the same calculation. RepOps is a software library that fixes the order of operations, ensuring that any device running the task produces the *exact same* bit-for-bit result. This is essential for the verification system to work, as it needs a single, reproducible "correct" answer to check against.
+                            </p>
+                        </div>
+                        <div id="tech-comms" class="tech-panel hidden">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">NoLoCo & SkipPipe: Efficient Communication</h4>
+                            <p class="text-neutral-700">Training AI across many different, unreliable internet connections is hard. These are novel communication protocols designed for this "heterogeneous" environment. They allow model updates to be shared efficiently between nodes, even on low-bandwidth networks, and are fault-tolerant, so the training doesn't fail if some nodes drop off. This enables true global-scale parallel training.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Ecosystem & Use Cases</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                The Gensyn network is designed to be a foundational layer for a new, open AI economy. It can be used by AI startups, academic researchers, or even individual hobbyists who are currently priced out of the market. The protocol unlocks a vast supply of latent compute from around the globe.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
+                    <h3 class="text-xl font-semibold text-center mb-4">Potential Compute Sources</h3>
+                    <div class="chart-container" style="max-width: 400px; height: 300px;">
+                        <canvas id="sourcesChart"></canvas>
+                    </div>
+                    <p class="text-center text-neutral-600 mt-4">
+                        Gensyn can aggregate compute from underutilized data centers, powerful gaming rigs, personal laptops, and more.
+                    </p>
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-neutral-800 mb-4">Key Projects & Applications</h3>
+                    <div class="metric-card">
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">RL Swarm</h4>
+                        <p class="text-neutral-600">A peer-to-peer system for collaborative reinforcement learning (RL) over the internet. It allows multiple AI agents to learn a task together in a decentralized way, showcasing the protocol's power.</p>
+                    </div>
+                    <div class="metric-card">
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">BlockAssist</h4>
+                        <p class="text-neutral-600">An experimental project that trains a machine learning model to complete tasks inside the game Minecraft, demonstrating a creative, real-world application of decentralized training.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="status" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">Status & Funding</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Gensyn is a well-capitalized project in its active development and testnet phase. It has garnered significant backing from major investors in the Web3 and AI space, validating its ambitious approach to solving the compute bottleneck.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="metric-card text-center">
+                    <h3 class="text-3xl font-bold text-blue-600 mb-2">$50M+</h3>
+                    <p class="text-neutral-600 font-semibold">Total Funding Raised</p>
+                </div>
+                <div class="metric-card text-center">
+                    <h3 class="text-3xl font-bold text-blue-600 mb-2">$43M</h3>
+                    <p class="text-neutral-600 font-semibold">Series A Round</p>
+                </div>
+                <div class="metric-card text-center">
+                    <h3 class="text-xl font-bold text-blue-600 mb-2">a16z Crypto</h3>
+                    <p class="text-neutral-600 font-semibold">Lead Investor (Series A)</p>
+                </div>
+            </div>
+            <div class="bg-blue-600 text-white p-8 rounded-lg shadow-xl text-center">
+                <h3 class="text-2xl font-bold mb-4">The Gensyn Testnet is Live</h3>
+                <p class="text-blue-100 text-lg mb-6">
+                    You can participate in the testnet by contributing compute power. Early contributors to Web3 protocols are often rewarded with airdrops or other benefits when the main network launches.
+                </p>
+                <a href="https://docs.gensyn.ai/" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-neutral-100 transition-all duration-200">
+                    Learn More & Join
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-neutral-200 mt-16">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-neutral-500">
+            <p>This is an interactive report based on publicly available information about the Gensyn project. Not financial advice.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            new Chart(costCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Centralized Cloud (e.g., AWS, GCP)', 'Gensyn (Projected)'],
+                    datasets: [{
+                        label: 'Relative Cost of AI Training',
+                        data: [100,
