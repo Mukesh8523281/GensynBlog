@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gensyn Protocol: Decentralized AI Compute</title>
+    <title>Gensyn: Decentralized AI Compute</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Harmony (Neutral Base, Blue Accent) -->
-    <!-- Application Structure Plan: A thematic, single-page dashboard. This structure allows users to explore the project's complex components (Mission, Problem/Solution, Core Tech, Ecosystem, and Status) non-linearly. The sticky navigation enables quick context switching, while interactive elements (toggles and diagrams) break down complex protocol mechanisms into digestible, focused units. This design prioritizes technical clarity and professional presentation. -->
-    <!-- Visualization & Content Choices: [Cost Comparison: Bar Chart (Chart.js) -> Goal: Compare -> Interaction: Hover -> Justification: Directly quantifies the value proposition (cost reduction) against centralized alternatives.] [Participant Workflow: Interactive Diagram (HTML/JS) -> Goal: Organize/Explain Process -> Interaction: Click-to-reveal role descriptions -> Justification: Clarifies the flow and incentives of the trustless market roles.] [Core Tech: Toggles (HTML/JS) -> Goal: Inform/Explain -> Interaction: Click-to-update technical definitions -> Justification: Groups four distinct, dense technical innovations (Verde, RepOps, Judge, Comms) into one clean, manageable interface.] -->
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, single-page dashboard. This structure allows users to explore the project's complex components (What, Why, How, Ecosystem, Status) in a non-linear way, which is ideal for understanding a technical concept. The sticky navigation facilitates easy jumps between these themes. Interactions like click-to-reveal for participant roles and toggles for core technologies are chosen to pack dense information into a clean, user-driven interface, enhancing usability and comprehension over a static, linear report. -->
+    <!-- Visualization & Content Choices: [Cost Comparison: Bar Chart (Chart.js) -> Goal: Compare -> Interaction: Hover -> Justification: Clearly visualizes the cost disparity between centralized vs. decentralized compute.] [Participant Workflow: Interactive Diagram (HTML/JS) -> Goal: Organize/Explain Process -> Interaction: Click-to-reveal role descriptions -> Justification: Makes a complex system flow engaging and digestible.] [Compute Sources: Donut Chart (Chart.js) -> Goal: Inform (Proportions) -> Interaction: Hover -> Justification: Shows the component parts of the total potential compute pool.] [Core Tech: Toggles (HTML/JS) -> Goal: Inform/Explain -> Interaction: Click-to-update text pane -> Justification: Condenses complex technical details into a single, interactive UI element.] -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevents horizontal scroll on all devices */
         }
         .chart-container {
             position: relative;
@@ -45,7 +44,7 @@
             @apply pt-20 -mt-16; 
         }
         .tech-toggle {
-            @apply px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all whitespace-nowrap;
+            @apply px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-all;
         }
         .tech-toggle.active {
             @apply bg-blue-600 text-white shadow-lg;
@@ -60,11 +59,24 @@
             @apply border-blue-600 ring-2 ring-blue-300 shadow-md;
         }
         .role-description-panel {
-            display: none; /* Use display:none for JS control, simpler than Tailwind 'hidden' */
-            @apply mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
+            @apply hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
         }
         .role-description-panel.active {
-            display: block;
+            @apply block;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -74,15 +86,16 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between items-center h-full">
                 <div class="flex-shrink-0">
-                    <h1 class="text-2xl font-bold text-blue-600">Gensyn Protocol</h1>
+                    <h1 class="text-2xl font-bold text-blue-600">Gensyn</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4" id="nav-menu">
-                        <a href="#mission" class="nav-link">Mission</a>
-                        <a href="#problem" class="nav-link">The Bottleneck</a>
-                        <a href="#protocol" class="nav-link">The Protocol</a>
-                        <a href="#tech" class="nav-link">Core Tech</a>
-                        <a href="#ecosystem" class="nav-link">Ecosystem</a>
+                        <a href="#what" class="nav-link">What is Gensyn?</a>
+                        <a href="#problem" class="nav-link">The Problem</a>
+                        <a href="#how" class="nav-link">How it Works</a>
+                        <a href="#ecosystem" class="nav-link">The Ecosystem</a>
+                        <a href="#ai-tools" class="nav-link">AI Tools</a>
+                        <a href="#status" class="nav-link">Status & Funding</a>
                     </div>
                 </div>
                 <div class="md:hidden">
@@ -97,174 +110,227 @@
         </nav>
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-neutral-200">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#mission" class="nav-link block">Mission</a>
-                <a href="#problem" class="nav-link block">The Bottleneck</a>
-                <a href="#protocol" class="nav-link block">The Protocol</a>
-                <a href="#tech" class="nav-link block">Core Tech</a>
-                <a href="#ecosystem" class="nav-link block">Ecosystem</a>
+                <a href="#what" class="nav-link block">What is Gensyn?</a>
+                <a href="#problem" class="nav-link block">The Problem</a>
+                <a href="#how" class="nav-link block">How it Works</a>
+                <a href="#ecosystem" class="nav-link block">The Ecosystem</a>
+                <a href="#ai-tools" class="nav-link block">AI Tools</a>
+                <a href="#status" class="nav-link block">Status & Funding</a>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
 
-        <section id="mission" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">Gensyn: The Machine Learning Compute Network</h2>
+        <section id="what" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">What is Gensyn?</h2>
             <p class="text-lg text-neutral-600 mb-8">
-                Gensyn is a **Layer-1, trustless protocol** that unifies the world's latent and available computing power—from gaming rigs to enterprise data centers—into a single, massive **global supercluster**. It is specifically engineered to handle and verify the demanding workloads of **deep learning model training**, democratizing access to high-performance AI infrastructure via a decentralized network.
+                Gensyn is a **Layer-1 blockchain protocol** designed to create a global, decentralized "supercluster" for artificial intelligence (AI) computation. It sits at the intersection of Web3 and AI, aiming to unite the world's untapped computing power—from large data centers to personal gaming rigs—into a single, open network accessible to anyone, anytime.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="metric-card">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Decentralized Execution</h3>
-                    <p class="text-neutral-600">Enables off-chain ML training and parallel processing across heterogeneous devices globally.</p>
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Layer-1 Protocol</h3>
+                    <p class="text-neutral-600">A custom Ethereum rollup built specifically for verifying machine learning computation trustlessly.</p>
                 </div>
                 <div class="metric-card">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Trustless Verification</h3>
-                    <p class="text-neutral-600">Uses **Probabilistic Proof-of-Learning** and cryptographic checks to verify work without full replication.</p>
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Global Compute Supercluster</h3>
+                    <p class="text-neutral-600">Aims to connect all compute devices (GPUs, TPUs, CPUs) into one virtual network for training AI models.</p>
                 </div>
                 <div class="metric-card">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Cost Efficiency</h3>
-                    <p class="text-neutral-600">By accessing latent supply, the protocol dramatically reduces the cost barrier for developers and researchers.</p>
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">AI/ML Focused</h3>
+                    <p class="text-neutral-600">Specifically designed to handle the high-intensity, parallel workloads of deep learning and model training.</p>
                 </div>
                 <div class="metric-card">
-                    <h3 class="text-lg font-semibold text-blue-600 mb-2">Token-Incentivized</h3>
-                    <p class="text-neutral-600">Rewards compute providers (Solvers) immediately and programmatically via smart contracts for their contributions.</p>
+                    <h3 class="text-lg font-semibold text-blue-600 mb-2">DePIN Project</h3>
+                    <p class="text-neutral-600">A "Decentralized Physical Infrastructure Network" that creates a marketplace for a real-world resource: computation.</p>
                 </div>
             </div>
         </section>
 
         <section id="problem" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Bottleneck: Centralized Compute Monopoly</h2>
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Problem: AI's Compute Bottleneck</h2>
             <p class="text-lg text-neutral-600 mb-8">
-                The exponential growth of AI models has made access to specialized hardware (GPUs) the single most significant constraint on innovation. Training costs are enormous, and the supply of compute is concentrated in the hands of a few large cloud providers (AWS, Google, Microsoft), creating high margins and stifling competition and open-source development. Gensyn's goal is to tap into the globally distributed, latent hardware supply to break this monopoly.
+                Access to computation is the single biggest bottleneck in AI development. Training advanced models requires massive computational power, which is expensive and overwhelmingly controlled by a few large cloud providers. This centralization stifles innovation, creates high-cost barriers for startups and researchers, and concentrates control over the future of AI.
             </p>
             <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
-                <h3 class="text-xl font-semibold text-center mb-4">Relative Cost of AI Training</h3>
+                <h3 class="text-xl font-semibold text-center mb-4">Cost of AI Compute: Centralized vs. Decentralized</h3>
                 <div class="chart-container">
                     <canvas id="costChart"></canvas>
                 </div>
                 <p class="text-center text-neutral-600 mt-4">
-                    The visualization compares the high cost of centralized cloud compute against the projected cost efficiency of the decentralized Gensyn network, enabled by a competitive, open marketplace.
+                    Gensyn aims to dramatically reduce compute costs by unlocking underutilized hardware and creating a competitive, open market, breaking the hold of expensive, centralized providers.
                 </p>
             </div>
         </section>
 
-        <section id="protocol" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Protocol: Trustless Market Flow</h2>
+        <section id="how" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">How it Works: A Trustless Marketplace</h2>
             <p class="text-lg text-neutral-600 mb-8">
-                The Gensyn Protocol orchestrates a complex deep learning task by dividing it, allocating it, and verifying its execution among four distinct roles. This section explains the relationship between the demand side (Submitters) and the supply side (Solvers/Verifiers) that creates a self-regulating, trustless compute environment.
+                Gensyn creates a trustless marketplace using smart contracts. But its core innovation is solving the "fundamental challenge": how to prove that computation was performed correctly off-chain without having to re-do the work. It uses a novel system of verification and incentives to ensure everyone plays fair.
             </p>
 
             <div class="mb-12">
-                <h3 class="text-2xl font-semibold text-neutral-800 mb-4">Incentive Mechanism and Roles</h3>
-                <p class="text-neutral-600 mb-6">Click on each participant role to understand its responsibilities and economic incentives.</p>
+                <h3 class="text-2xl font-semibold text-neutral-800 mb-4">Participant Workflow</h3>
+                <p class="text-neutral-600 mb-6">Click on each role to understand its function in the network.</p>
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-                    <div id="role-submitter" class="role-diagram-item">Submitter (Demand)</div>
+                    <div id="role-submitter" class="role-diagram-item">Submitter</div>
                     <div class="text-center font-bold text-blue-600 text-2xl hidden md:block">→</div>
                     <div class="text-center font-bold text-blue-600 text-2xl block md:hidden">↓</div>
-                    <div id="role-solver" class="role-diagram-item">Solver (Supply)</div>
+                    <div id="role-solver" class="role-diagram-item">Solver</div>
                     <div class="text-center font-bold text-blue-600 text-2xl hidden md:block">←</div>
                     <div class="text-center font-bold text-blue-600 text-2xl block md:hidden">↓</div>
                     <div id="role-verifier" class="role-diagram-item md:col-start-5">Verifier / Whistleblower</div>
                 </div>
 
                 <div id="role-description-container" class="mt-6 bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
-                    <div class="role-description-panel active" id="desc-initial" style="display: block;">
+                    <div class="role-description-panel active" id="desc-initial">
                         <p class="text-center font-medium text-neutral-600">Click on any role above to see a detailed description of its responsibilities and incentives within the Gensyn network.</p>
                     </div>
                     <div class="role-description-panel" id="desc-submitter">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Submitter: The Compute Client</h4>
-                        <p class="text-neutral-700"><strong>Submitters</strong> require deep learning tasks (like model training or fine-tuning) to be executed. They submit the job and the corresponding fee in Gensyn tokens to the network. Their model integrity is protected by the protocol's trustless verification system.</p>
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Submitter: The Client</h4>
+                        <p class="text-neutral-700"><strong>Submitters</strong> are the developers or researchers. They are the demand side of the network. They package their AI model training tasks (like a large language model fine-tuning job) and submit them to the protocol, along with the required payment (in Gensyn tokens) for the compute providers.</p>
                     </div>
                     <div class="role-description-panel" id="desc-solver">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">Solver: The Compute Provider</h4>
-                        <p class="text-neutral-700"><strong>Solvers</strong> contribute hardware (GPU, TPU) to the network. They execute the ML workload assigned by the protocol's scheduler. Upon successful verification of their work via the **Verde** mechanism, they receive direct, programmatic token payments for their contributed compute time.</p>
+                        <p class="text-neutral-700"><strong>Solvers</strong> contribute their underutilized hardware (GPUs, TPUs). They accept a submitted task, execute the deep learning computation off-chain, and provide the results back to the network. Upon successful verification, they receive the token rewards as payment for their compute time.</p>
                     </div>
                     <div class="role-description-panel" id="desc-verifier">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">Verifier / Whistleblower: The Integrity Check</h4>
-                        <p class="text-neutral-700">These participants maintain network integrity. **Verifiers** perform lightweight, probabilistic checks on Solvers' work. If verification fails, a **Whistleblower** (who can be a Verifier) initiates a dispute resolution game. If successful in proving misconduct, the Whistleblower is rewarded, and the dishonest Solver is penalized via staked collateral.</p>
+                        <p class="text-neutral-700">These participants monitor the work. **Verifiers** perform lightweight, probabilistic checks to ensure the Solvers' computations are accurate. **Whistleblowers** identify and report bad behavior. If they successfully prove a Solver submitted incorrect work, the Verifier/Whistleblower is rewarded, and the dishonest Solver is penalized through staked collateral. This creates the trustless incentive mechanism.</p>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <section id="tech" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">Core Technology Pillars</h2>
-            <p class="text-lg text-neutral-600 mb-8">
-                Gensyn solves long-standing challenges in distributed deep learning by introducing four primary innovations at the intersection of cryptography, game theory, and complexity theory. Click to explore each component.
-            </p>
-            <div class="flex flex-wrap gap-4 mb-4" id="tech-toggles">
-                <button class="tech-toggle active" data-target="tech-verde">Verde (Verification)</button>
-                <button class="tech-toggle inactive" data-target="tech-repops">RepOps (Reproducibility)</button>
-                <button class="tech-toggle inactive" data-target="tech-judge">Judge (RL Execution)</button>
-                <button class="tech-toggle inactive" data-target="tech-comms">NoLoCo/SkipPipe (Communication)</button>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200 min-h-[150px]">
-                <div id="tech-content">
-                    <div id="tech-verde" class="tech-panel active">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Verde: Trustless Verification Protocol</h4>
-                        <p class="text-neutral-700">Verde enables **Probabilistic Proof-of-Learning (PoL)**. It is an arbitration system that uses a **Truebit-style incentive game** to verify the correctness of off-chain ML computation. Instead of forcing expensive, full re-execution, it scalably pinpoints the exact point of disagreement between a Solver and a Challenger, making verification orders of magnitude cheaper and faster.</p>
-                    </div>
-                    <div id="tech-repops" class="tech-panel">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">RepOps: Reproducible Operators Library</h4>
-                        <p class="text-neutral-700">This low-level library solves the problem of **determinism** across heterogeneous hardware. By fixing the execution order of floating-point operations, RepOps ensures that the exact same machine learning task executed on two completely different GPUs (e.g., consumer vs. data center cards) produces the **exact same bit-for-bit output**. This reproducibility is non-negotiable for the **Verde** verification game to function reliably.</p>
-                    </div>
-                    <div id="tech-judge" class="tech-panel">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">Judge: Decentralized Execution Layer for RL</h4>
-                        <p class="text-neutral-700">**Judge** is the specialized, cryptographically verifiable runtime engine for complex reinforcement learning (RL) workloads, integrated particularly within the **RL Swarm**. It acts as the decentralized execution and scheduling layer that allocates, manages, and validates RL agents across the distributed network, ensuring fairness and efficient resource utilization in multi-agent learning environments.</p>
-                    </div>
-                    <div id="tech-comms" class="tech-panel">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">NoLoCo & SkipPipe: Communication Protocols</h4>
-                        <p class="text-neutral-700">These protocols optimize data transmission for distributed training. **NoLoCo** (No Local Coordination) replaces the heavy global synchronisation step in model training with a lightweight gossip method, enabling training over low-bandwidth, unreliable networks. **SkipPipe** is a pipeline parallel training method that significantly improves fault tolerance and reduces iteration time.</p>
+
+            <div>
+                <h3 class="text-2xl font-semibold text-neutral-800 mb-4">Core Technologies</h3>
+                <p class="text-neutral-600 mb-6">Gensyn is powered by several key innovations. Select a technology to learn more about it.</p>
+                <div class="flex flex-wrap gap-4 mb-4" id="tech-toggles">
+                    <button class="tech-toggle active" data-target="tech-verde">Verification (Verde)</button>
+                    <button class="tech-toggle inactive" data-target="tech-repops">Reproducibility (RepOps)</button>
+                    <button class="tech-toggle inactive" data-target="tech-judge">Execution (Judge)</button>
+                    <button class="tech-toggle inactive" data-target="tech-comms">Communication (NoLoCo)</button>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200 min-h-[150px]">
+                    <div id="tech-content">
+                        <div id="tech-verde" class="tech-panel">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">Verde: Probabilistic Proof-of-Learning</h4>
+                            <p class="text-neutral-700">This is Gensyn's verification system. Instead of re-running an entire, expensive AI model to check it, Verde uses a probabilistic method combined with a Truebit-style "dispute resolution game." Verifiers can cheaply check the work, and if they find an error, they can challenge the Solver. The protocol then efficiently pinpoints the exact step of disagreement to determine who is correct, ensuring trust without wasting compute.
+                            </p>
+                        </div>
+                        <div id="tech-repops" class="tech-panel hidden">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">RepOps: Reproducible Operators</h4>
+                            <p class="text-neutral-700">A key problem in distributed computing is that different hardware (e.g., an Nvidia A100 vs. an H100 GPU) can produce tiny, different results for the same calculation. RepOps is a software library that fixes the order of floating-point operations, ensuring that any device running the task produces the *exact same* bit-for-bit result. This **determinism** is essential for the verification system to work, as it needs a single, reproducible "correct" answer to check against.
+                            </p>
+                        </div>
+                        <div id="tech-judge" class="tech-panel hidden">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">Judge: Decentralized Execution Layer</h4>
+                            <p class="text-neutral-700">Judge is the dedicated execution layer for Reinforcement Learning (RL) workloads, particularly those run by the **RL Swarm**. It acts as a **cryptographically verifiable runtime** that handles the critical tasks of **allocating, scheduling, and validating** RL jobs across the network. By ensuring fairness and efficient use of compute within the swarm, Judge prevents bad actors from manipulating complex, multi-agent learning environments.</p>
+                        </div>
+                        <div id="tech-comms" class="tech-panel hidden">
+                            <h4 class="text-lg font-semibold text-blue-600 mb-2">NoLoCo & SkipPipe: Efficient Communication</h4>
+                            <p class="text-neutral-700">Training AI across many different, unreliable internet connections is hard. These are novel communication protocols designed for this "heterogeneous" environment. They allow model updates to be shared efficiently between nodes, even on low-bandwidth networks, and are fault-tolerant, so the training doesn't fail if some nodes drop off. This enables true global-scale parallel training.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="ecosystem" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">Ecosystem & Development Status</h2>
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">The Ecosystem & Use Cases</h2>
             <p class="text-lg text-neutral-600 mb-8">
-                The protocol is currently in its Testnet phase, focusing on building out and testing its core components and reference applications. This phase is crucial for bootstrapping the network effects and ensuring the economic incentives align correctly before the mainnet launch.
+                The Gensyn network is designed to be a foundational layer for a new, open AI economy. It can be used by AI startups, academic researchers, or even individual hobbyists who are currently priced out of the market. The protocol unlocks a vast supply of latent compute from around the globe.
             </p>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Status/Funding -->
-                <div class="lg:col-span-1 space-y-4">
-                    <div class="metric-card text-center">
-                        <h3 class="text-4xl font-bold text-blue-600 mb-2">$50M+</h3>
-                        <p class="text-neutral-600 font-semibold">Total Funding Raised</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
+                    <h3 class="text-xl font-semibold text-center mb-4">Potential Compute Sources</h3>
+                    <div class="chart-container" style="max-width: 400px; height: 300px;">
+                        <canvas id="sourcesChart"></canvas>
                     </div>
-                    <div class="metric-card text-center">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-2">Testnet Active</h3>
-                        <p class="text-neutral-600 font-semibold">Live development and early contributor phase.</p>
-                    </div>
-                    <div class="metric-card text-center">
-                        <h3 class="text-xl font-bold text-blue-600 mb-2">a16z, CoinFund</h3>
-                        <p class="text-neutral-600 font-semibold">Major Institutional Backing</p>
-                    </div>
+                    <p class="text-center text-neutral-600 mt-4">
+                        Gensyn can aggregate compute from underutilized data centers, powerful gaming rigs, personal laptops, and more.
+                    </p>
                 </div>
-
-                <!-- Projects -->
-                <div class="lg:col-span-2 space-y-6">
-                    <h3 class="text-xl font-semibold text-neutral-800 mb-4">Key Reference Applications</h3>
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-neutral-800 mb-4">Key Projects & Applications</h3>
                     <div class="metric-card">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">RL Swarm (Reinforcement Learning)</h4>
-                        <p class="text-neutral-600">A decentralized, peer-to-peer system designed for **collaborative reinforcement learning**. It showcases how multiple autonomous agents can learn collectively over the distributed network, leveraging the **Judge** runtime for validated execution.</p>
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">RL Swarm</h4>
+                        <p class="text-neutral-600">A peer-to-peer system for collaborative reinforcement learning (RL) over the internet. It allows multiple AI agents to learn a task together in a decentralized way, showcasing the protocol's power.</p>
                     </div>
                     <div class="metric-card">
-                        <h4 class="text-lg font-semibold text-blue-600 mb-2">BlockAssist (Experimental RL)</h4>
-                        <p class="text-neutral-600">A high-profile demonstration where a machine learning model is trained to complete tasks inside the game Minecraft. This experiment validates the protocol's ability to handle complex, real-time reinforcement learning environments across an open, untrusted cluster.</p>
+                        <h4 class="text-lg font-semibold text-blue-600 mb-2">BlockAssist</h4>
+                        <p class="text-neutral-600">An experimental project that trains a machine learning model to complete tasks inside the game Minecraft, demonstrating a creative, real-world application of decentralized training.</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="bg-blue-600 text-white p-8 rounded-lg shadow-xl text-center mt-8">
-                <h3 class="text-2xl font-bold mb-4">Join the Decentralized AI Revolution</h3>
+        </section>
+
+        <section id="ai-tools" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">AI Exploration Tools ✨</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Use the power of AI to instantly clarify complex Web3/AI concepts or brainstorm revolutionary new applications for the Gensyn Protocol.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- AI CLARIFICATION TOOL -->
+                <div class="metric-card p-6">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">✨ Clarify Concept</h3>
+                    <p class="text-sm text-neutral-500 mb-3">Stuck on a term like 'Verde' or 'Truebit-style incentive game'? Enter any concept for a simple, one-paragraph explanation.</p>
+                    
+                    <input type="text" id="clarify-input" placeholder="e.g., Probabilistic Proof-of-Learning" class="w-full p-3 mb-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <button id="clarify-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50">
+                        <span id="clarify-btn-text">Clarify Concept</span>
+                    </button>
+
+                    <div id="clarify-output" class="mt-4 p-4 bg-neutral-100 rounded-lg border border-neutral-300 min-h-[50px] text-neutral-700 text-sm hidden">
+                        <!-- Result displayed here -->
+                    </div>
+                </div>
+
+                <!-- USE CASE BRAINSTORMER -->
+                <div class="metric-card p-6">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">✨ Decentralized Use Case Brainstormer</h3>
+                    <p class="text-sm text-neutral-500 mb-3">Enter an AI domain (e.g., "Drug Discovery," "Autonomous Vehicles") and generate 3 speculative, high-impact Gensyn use cases.</p>
+                    
+                    <input type="text" id="brainstorm-input" placeholder="e.g., Decentralized Robotics" class="w-full p-3 mb-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <button id="brainstorm-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50">
+                        <span id="brainstorm-btn-text">Generate Use Cases</span>
+                    </button>
+
+                    <div id="brainstorm-output" class="mt-4 p-4 bg-neutral-100 rounded-lg border border-neutral-300 min-h-[50px] text-neutral-700 text-sm hidden">
+                        <!-- Result displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="status" class="content-section mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 mb-4">Status & Funding</h2>
+            <p class="text-lg text-neutral-600 mb-8">
+                Gensyn is a well-capitalized project in its active development and testnet phase. It has garnered significant backing from major investors in the Web3 and AI space, validating its ambitious approach to solving the compute bottleneck.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="metric-card text-center">
+                    <h3 class="text-3xl font-bold text-blue-600 mb-2">$50M+</h3>
+                    <p class="text-neutral-600 font-semibold">Total Funding Raised</p>
+                </div>
+                <div class="metric-card text-center">
+                    <h3 class="text-3xl font-bold text-blue-600 mb-2">$43M</h3>
+                    <p class="text-neutral-600 font-semibold">Series A Round</p>
+                </div>
+                <div class="metric-card text-center">
+                    <h3 class="text-xl font-bold text-blue-600 mb-2">a16z Crypto</h3>
+                    <p class="text-neutral-600 font-semibold">Lead Investor (Series A)</p>
+                </div>
+            </div>
+            <div class="bg-blue-600 text-white p-8 rounded-lg shadow-xl text-center">
+                <h3 class="text-2xl font-bold mb-4">The Gensyn Testnet is Live</h3>
                 <p class="text-blue-100 text-lg mb-6">
-                    The Testnet is the opportunity to contribute compute, test the protocol, and become an early participant in the Gensyn network.
+                    You can participate in the testnet by contributing compute power. Early contributors to Web3 protocols are often rewarded with airdrops or other benefits when the main network launches.
                 </p>
                 <a href="https://docs.gensyn.ai/" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-neutral-100 transition-all duration-200">
-                    Explore Documentation
+                    Learn More & Join
                 </a>
             </div>
         </section>
@@ -273,13 +339,83 @@
 
     <footer class="bg-white border-t border-neutral-200 mt-16">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-neutral-500">
-            <p>This interactive report is based on Gensyn's public whitepapers and documentation. Not financial or investment advice.</p>
+            <p>This is an interactive report based on publicly available information about the Gensyn project. Not financial advice.</p>
         </div>
     </footer>
 
-    <!-- All JavaScript is placed at the end of the body for optimal loading performance -->
+    <!-- Firebase/Auth Setup must be imported as a module and run first -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // Global variables for Firebase access
+        window.firebaseApp = null;
+        window.auth = null;
+        window.apiKey = ""; 
+
+        async function initFirebase() {
+            try {
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                window.apiKey = firebaseConfig.apiKey || "";
+
+                if (Object.keys(firebaseConfig).length > 0) {
+                    window.firebaseApp = initializeApp(firebaseConfig);
+                    window.auth = getAuth(window.firebaseApp);
+                    
+                    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(window.auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(window.auth);
+                    }
+                }
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+            }
+        }
+        
+        initFirebase();
+    </script>
+    
+    <!-- General JavaScript and LLM logic -->
     <script>
         
+        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
+        const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/";
+
+        // Function to handle fetching from the Gemini API with exponential backoff
+        async function fetchGemini(endpoint, payload, maxRetries = 3, delay = 1000) {
+            const apiUrl = `${API_BASE_URL}${endpoint}?key=${window.apiKey || ''}`;
+            
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 429 && i < maxRetries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                        continue;
+                    }
+                    
+                    if (!response.ok) {
+                         const errorBody = await response.json();
+                         throw new Error(`API error: ${response.status} - ${errorBody.error?.message || response.statusText}`);
+                    }
+
+                    return await response.json();
+
+                } catch (error) {
+                    if (i === maxRetries - 1) {
+                        throw new Error("Failed to connect to the Gemini API after multiple retries. Please check your network connection.");
+                    }
+                }
+            }
+        }
+
         /* --- Chart.js Initialization --- */
         
         function initializeCharts() {
@@ -289,10 +425,10 @@
                 new Chart(costCtx.getContext('2d'), {
                     type: 'bar',
                     data: {
-                        labels: ['Centralized Cloud (Monopoly)', 'Gensyn Protocol (Open Market)'],
+                        labels: ['Centralized Cloud (e.g., AWS, GCP)', 'Gensyn (Projected)'],
                         datasets: [{
                             label: 'Relative Cost of AI Training',
-                            data: [100, 25], 
+                            data: [100, 25],
                             backgroundColor: [
                                 'rgba(220, 38, 38, 0.6)',
                                 'rgba(37, 99, 235, 0.6)'
@@ -313,43 +449,168 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Relative Cost Index (%)'
-                                },
                                 ticks: {
                                     callback: function(value) { return value + '%' }
-                                },
-                                max: 120 
-                            },
-                            x: {
-                                grid: { display: false }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Compute Sources Doughnut Chart
+            const sourcesCtx = document.getElementById('sourcesChart');
+            if (sourcesCtx) {
+                new Chart(sourcesCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Latent Data Centers', 'Crypto Miners', 'Gaming Rigs', 'Personal Laptops/Other'],
+                        datasets: [{
+                            label: 'Potential Compute Sources',
+                            data: [40, 30, 20, 10],
+                            backgroundColor: [
+                                'rgba(37, 99, 235, 0.8)',
+                                'rgba(20, 184, 166, 0.8)',
+                                'rgba(234, 179, 8, 0.8)',
+                                'rgba(107, 114, 128, 0.8)'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
                             }
                         }
                     }
                 });
             }
         }
-        
-        /* --- General Interaction Logic --- */
 
-        function setupInteractions() {
+
+        /* --- LLM Feature Handlers --- */
+        
+        function setLoadingState(btnId, outputId, isLoading, defaultText) {
+            const btn = document.getElementById(btnId);
+            const output = document.getElementById(outputId);
+            const btnText = document.getElementById(btnId + '-text');
+
+            btn.disabled = isLoading;
+            output.classList.add('hidden');
+            output.innerHTML = isLoading ? '<div class="loading-spinner"></div> Loading... Please wait.' : '';
+            btnText.textContent = isLoading ? 'Processing...' : defaultText;
+        }
+
+        // 1. Clarify Concept (Glossary Tool)
+        async function handleClarifyConcept() {
+            const input = document.getElementById('clarify-input');
+            const query = input.value.trim();
+            const outputId = 'clarify-output';
+            const btnId = 'clarify-btn';
+
+            if (!query) {
+                document.getElementById(outputId).classList.remove('hidden');
+                document.getElementById(outputId).innerHTML = '<p class="text-red-600">Please enter a concept to clarify.</p>';
+                return;
+            }
+
+            setLoadingState(btnId, outputId, true, 'Clarify Concept');
+            document.getElementById(outputId).classList.remove('hidden');
+
+
+            const systemPrompt = "You are a friendly AI tutor specializing in Web3 and decentralized AI. Provide a concise, single paragraph explanation of the user's concept, using simple, non-jargon language where possible. The response must be formatted as plain text only (no headings, lists, or markdown formatting).";
             
-            /* --- Mobile Navigation & Smooth Scroll --- */
+            const userQuery = `Explain this concept: ${query}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }], // Use search for grounded definitions
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            try {
+                const result = await fetchGemini(GEMINI_MODEL + ':generateContent', payload);
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't find a clear explanation for that concept.";
+
+                const formattedText = text.replace(/\n/g, '<br>');
+
+                document.getElementById(outputId).innerHTML = formattedText;
+                
+            } catch (error) {
+                document.getElementById(outputId).innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+            } finally {
+                setLoadingState(btnId, outputId, false, 'Clarify Concept');
+            }
+        }
+
+        // 2. Generate Use Cases (Brainstormer Tool)
+        async function handleGenerateUseCases() {
+            const input = document.getElementById('brainstorm-input');
+            const domain = input.value.trim();
+            const outputId = 'brainstorm-output';
+            const btnId = 'brainstorm-btn';
+
+            if (!domain) {
+                document.getElementById(outputId).classList.remove('hidden');
+                document.getElementById(outputId).innerHTML = '<p class="text-red-600">Please enter a domain (e.g., Finance, Education).</p>';
+                return;
+            }
+
+            setLoadingState(btnId, outputId, true, 'Generate Use Cases');
+            document.getElementById(outputId).classList.remove('hidden');
+
+            const systemPrompt = `You are a visionary Web3 and decentralized AI strategist. Given the user's domain, generate exactly 3 highly speculative and high-impact project ideas that the Gensyn Protocol (a decentralized, trustless AI compute network) could power. For each idea, briefly describe the use case and how Gensyn's decentralized verification is critical. Respond only with the three ideas as a numbered list.`;
+            
+            const userQuery = `Generate Gensyn use cases for the domain: ${domain}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            try {
+                const result = await fetchGemini(GEMINI_MODEL + ':generateContent', payload);
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate use cases for that domain.";
+                
+                document.getElementById(outputId).innerHTML = text.replace(/\n/g, '<br>');
+                
+            } catch (error) {
+                document.getElementById(outputId).innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+            } finally {
+                setLoadingState(btnId, outputId, false, 'Generate Use Cases');
+            }
+        }
+
+        /* --- Existing DOM Logic --- */
+        
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Attach event listeners for new LLM features
+            document.getElementById('clarify-btn').addEventListener('click', handleClarifyConcept);
+            document.getElementById('brainstorm-btn').addEventListener('click', handleGenerateUseCases);
+
+
+            /* --- Mobile Navigation Fix --- */
             
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
-            const navLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
-            const sections = document.querySelectorAll('.content-section');
-            const header = document.getElementById('main-header');
             
-            // Mobile Menu Toggle
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
             
-            // Smooth Scroll Logic
-            navLinks.forEach(link => {
+            const allNavLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
+            const sections = document.querySelectorAll('.content-section');
+            const header = document.getElementById('main-header');
+            
+            allNavLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href').substring(1);
@@ -364,27 +625,24 @@
                             behavior: 'smooth'
                         });
                     }
-                    // Close mobile menu after click
-                    if (!mobileMenu.classList.contains('hidden')) { 
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) { 
                         mobileMenu.classList.add('hidden');
                     }
                 });
             });
 
-            // Active Link Highlighting
             function updateActiveLink() {
                 const headerHeight = header.offsetHeight;
                 let current = '';
 
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    // Offset check slightly below the header
-                    if (window.scrollY >= sectionTop - headerHeight - 10) { 
+                    if (window.scrollY >= sectionTop - headerHeight - 5) { 
                         current = section.getAttribute('id');
                     }
                 });
 
-                navLinks.forEach(link => {
+                allNavLinks.forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href').includes(current)) {
                         link.classList.add('active');
@@ -395,7 +653,7 @@
             window.addEventListener('scroll', updateActiveLink);
             updateActiveLink(); 
 
-            /* --- Core Technologies Toggles Logic (FIXED) --- */
+            /* --- Core Technologies Toggles Logic --- */
 
             const techToggles = document.getElementById('tech-toggles');
             const techPanels = document.querySelectorAll('#tech-content .tech-panel');
@@ -405,34 +663,25 @@
                 if (target.tagName === 'BUTTON') {
                     const targetId = target.dataset.target;
                     
-                    // Reset all button states
-                    techToggles.querySelectorAll('.tech-toggle').forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.classList.add('inactive');
+                    Array.from(techToggles.children).forEach(btn => {
+                        btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+                        btn.classList.add('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
                     });
                     
-                    // Activate clicked button
-                    target.classList.add('active');
-                    target.classList.remove('inactive');
+                    target.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
+                    target.classList.remove('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
                     
-                    // Reset all panel states and display only the target panel
                     techPanels.forEach(panel => {
-                        panel.style.display = 'none'; // Use direct style manipulation for robustness
+                        if (panel.id === targetId) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
                     });
-                    
-                    const targetPanel = document.getElementById(targetId);
-                    if(targetPanel) {
-                        targetPanel.style.display = 'block'; 
-                    }
                 }
             });
             
-            // Initialize Core Tech Panel visibility (only the first one)
-            techPanels.forEach((panel, index) => {
-                panel.style.display = (index === 0) ? 'block' : 'none';
-            });
-            
-            /* --- Participant Workflow Logic (FIXED) --- */
+            /* --- Participant Workflow Logic --- */
 
             const roleItems = document.querySelectorAll('.role-diagram-item');
             const roleDescriptionPanels = document.querySelectorAll('.role-description-panel');
@@ -442,34 +691,26 @@
                     const targetRole = item.id.split('-')[1]; 
                     const targetDescId = 'desc-' + targetRole; 
                     
-                    // Check if the same item was clicked to toggle off
                     const isActive = item.classList.contains('active');
 
-                    // Reset all
-                    roleItems.forEach(i => i.classList.remove('active'));
-                    roleDescriptionPanels.forEach(d => d.style.display = 'none');
-                    
-                    // Toggle Logic
-                    if (!isActive) {
-                        // Activate new item
-                        item.classList.add('active');
-                        document.getElementById(targetDescId).style.display = 'block';
-                    } else {
-                        // Revert to initial state
-                        document.getElementById('desc-initial').style.display = 'block';
+                    if (isActive) {
+                        roleItems.forEach(i => i.classList.remove('active'));
+                        roleDescriptionPanels.forEach(d => d.classList.remove('active'));
+                        document.getElementById('desc-initial').classList.add('active');
+                        return;
                     }
+
+                    roleItems.forEach(i => i.classList.remove('active'));
+                    roleDescriptionPanels.forEach(d => d.classList.remove('active'));
+
+                    item.classList.add('active');
+                    document.getElementById(targetDescId).classList.add('active');
                 });
             });
-            // Ensure initial description is displayed
-            document.getElementById('desc-initial').style.display = 'block';
-        }
-
-        // CRITICAL FIX: Ensure charts and all interactions run ONLY after the entire DOM is loaded.
-        window.onload = function() {
-            initializeCharts();
-            setupInteractions();
-        };
-
+        });
+        
+        // CRITICAL FIX: Ensure charts initialize correctly after all scripts load
+        window.onload = initializeCharts;
     </script>
 </body>
 </html>
