@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gensyn: Decentralized AI Compute</title>
+    <title>Gensyn: Decentralized AI Compute Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: A thematic, single-page dashboard. This structure allows users to explore the project's complex components (What, Why, How, Ecosystem, Status) in a non-linear way, which is ideal for understanding a technical concept. The sticky navigation facilitates easy jumps between these themes. Interactions like click-to-reveal for participant roles and toggles for core technologies are chosen to pack dense information into a clean, user-driven interface, enhancing usability and comprehension over a static, linear report. -->
+    <!-- Application Structure Plan: A thematic, single-page dashboard. This structure allows users to explore the project's complex components (What, Why, How, Ecosystem, Status) non-linearly. The sticky navigation facilitates easy jumps between these themes. Interactions like click-to-reveal for participant roles and toggles for core technologies are chosen to pack dense information into a clean, user-driven interface, enhancing usability and comprehension over a static, linear report. -->
     <!-- Visualization & Content Choices: [Cost Comparison: Bar Chart (Chart.js) -> Goal: Compare -> Interaction: Hover -> Justification: Clearly visualizes the cost disparity between centralized vs. decentralized compute.] [Participant Workflow: Interactive Diagram (HTML/JS) -> Goal: Organize/Explain Process -> Interaction: Click-to-reveal role descriptions -> Justification: Makes a complex system flow engaging and digestible.] [Compute Sources: Donut Chart (Chart.js) -> Goal: Inform (Proportions) -> Interaction: Hover -> Justification: Shows the component parts of the total potential compute pool.] [Core Tech: Toggles (HTML/JS) -> Goal: Inform/Explain -> Interaction: Click-to-update text pane -> Justification: Condenses complex technical details into a single, interactive UI element.] -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevents horizontal scroll on all devices */
         }
         .chart-container {
             position: relative;
@@ -64,20 +65,6 @@
         .role-description-panel.active {
             @apply block;
         }
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #2563eb;
-            border-radius: 50%;
-            width: 1.5rem;
-            height: 1.5rem;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="bg-neutral-50 text-neutral-800">
@@ -94,7 +81,6 @@
                         <a href="#problem" class="nav-link">The Problem</a>
                         <a href="#how" class="nav-link">How it Works</a>
                         <a href="#ecosystem" class="nav-link">The Ecosystem</a>
-                        <a href="#ai-tools" class="nav-link">AI Tools</a>
                         <a href="#status" class="nav-link">Status & Funding</a>
                     </div>
                 </div>
@@ -114,7 +100,6 @@
                 <a href="#problem" class="nav-link block">The Problem</a>
                 <a href="#how" class="nav-link block">How it Works</a>
                 <a href="#ecosystem" class="nav-link block">The Ecosystem</a>
-                <a href="#ai-tools" class="nav-link block">AI Tools</a>
                 <a href="#status" class="nav-link block">Status & Funding</a>
             </div>
         </div>
@@ -265,46 +250,6 @@
             </div>
         </section>
 
-        <section id="ai-tools" class="content-section mb-16">
-            <h2 class="text-3xl font-bold text-neutral-900 mb-4">AI Exploration Tools ✨</h2>
-            <p class="text-lg text-neutral-600 mb-8">
-                Use the power of AI to instantly clarify complex Web3/AI concepts or brainstorm revolutionary new applications for the Gensyn Protocol.
-            </p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
-                <!-- AI CLARIFICATION TOOL -->
-                <div class="metric-card p-6">
-                    <h3 class="text-xl font-semibold text-blue-600 mb-4">✨ Clarify Concept</h3>
-                    <p class="text-sm text-neutral-500 mb-3">Stuck on a term like 'Verde' or 'Truebit-style incentive game'? Enter any concept for a simple, one-paragraph explanation.</p>
-                    
-                    <input type="text" id="clarify-input" placeholder="e.g., Probabilistic Proof-of-Learning" class="w-full p-3 mb-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                    <button id="clarify-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50">
-                        <span id="clarify-btn-text">Clarify Concept</span>
-                    </button>
-
-                    <div id="clarify-output" class="mt-4 p-4 bg-neutral-100 rounded-lg border border-neutral-300 min-h-[50px] text-neutral-700 text-sm hidden">
-                        <!-- Result displayed here -->
-                    </div>
-                </div>
-
-                <!-- USE CASE BRAINSTORMER -->
-                <div class="metric-card p-6">
-                    <h3 class="text-xl font-semibold text-blue-600 mb-4">✨ Decentralized Use Case Brainstormer</h3>
-                    <p class="text-sm text-neutral-500 mb-3">Enter an AI domain (e.g., "Drug Discovery," "Autonomous Vehicles") and generate 3 speculative, high-impact Gensyn use cases.</p>
-                    
-                    <input type="text" id="brainstorm-input" placeholder="e.g., Decentralized Robotics" class="w-full p-3 mb-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                    <button id="brainstorm-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50">
-                        <span id="brainstorm-btn-text">Generate Use Cases</span>
-                    </button>
-
-                    <div id="brainstorm-output" class="mt-4 p-4 bg-neutral-100 rounded-lg border border-neutral-300 min-h-[50px] text-neutral-700 text-sm hidden">
-                        <!-- Result displayed here -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="status" class="content-section mb-16">
             <h2 class="text-3xl font-bold text-neutral-900 mb-4">Status & Funding</h2>
             <p class="text-lg text-neutral-600 mb-8">
@@ -343,79 +288,10 @@
         </div>
     </footer>
 
-    <!-- Firebase/Auth Setup must be imported as a module and run first -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
-        // Global variables for Firebase access
-        window.firebaseApp = null;
-        window.auth = null;
-        window.apiKey = ""; 
-
-        async function initFirebase() {
-            try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                window.apiKey = firebaseConfig.apiKey || "";
-
-                if (Object.keys(firebaseConfig).length > 0) {
-                    window.firebaseApp = initializeApp(firebaseConfig);
-                    window.auth = getAuth(window.firebaseApp);
-                    
-                    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(window.auth, initialAuthToken);
-                    } else {
-                        await signInAnonymously(window.auth);
-                    }
-                }
-            } catch (error) {
-                console.error("Firebase initialization failed:", error);
-            }
-        }
-        
-        initFirebase();
-    </script>
+    <!-- Firebase imports removed -->
     
-    <!-- General JavaScript and LLM logic -->
     <script>
         
-        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
-        const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/";
-
-        // Function to handle fetching from the Gemini API with exponential backoff
-        async function fetchGemini(endpoint, payload, maxRetries = 3, delay = 1000) {
-            const apiUrl = `${API_BASE_URL}${endpoint}?key=${window.apiKey || ''}`;
-            
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.status === 429 && i < maxRetries - 1) {
-                        await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
-                        continue;
-                    }
-                    
-                    if (!response.ok) {
-                         const errorBody = await response.json();
-                         throw new Error(`API error: ${response.status} - ${errorBody.error?.message || response.statusText}`);
-                    }
-
-                    return await response.json();
-
-                } catch (error) {
-                    if (i === maxRetries - 1) {
-                        throw new Error("Failed to connect to the Gemini API after multiple retries. Please check your network connection.");
-                    }
-                }
-            }
-        }
-
         /* --- Chart.js Initialization --- */
         
         function initializeCharts() {
@@ -490,127 +366,22 @@
             }
         }
 
-
-        /* --- LLM Feature Handlers --- */
+        /* --- Main DOM and Interaction Setup --- */
         
-        function setLoadingState(btnId, outputId, isLoading, defaultText) {
-            const btn = document.getElementById(btnId);
-            const output = document.getElementById(outputId);
-            const btnText = document.getElementById(btnId + '-text');
-
-            btn.disabled = isLoading;
-            output.classList.add('hidden');
-            output.innerHTML = isLoading ? '<div class="loading-spinner"></div> Loading... Please wait.' : '';
-            btnText.textContent = isLoading ? 'Processing...' : defaultText;
-        }
-
-        // 1. Clarify Concept (Glossary Tool)
-        async function handleClarifyConcept() {
-            const input = document.getElementById('clarify-input');
-            const query = input.value.trim();
-            const outputId = 'clarify-output';
-            const btnId = 'clarify-btn';
-
-            if (!query) {
-                document.getElementById(outputId).classList.remove('hidden');
-                document.getElementById(outputId).innerHTML = '<p class="text-red-600">Please enter a concept to clarify.</p>';
-                return;
-            }
-
-            setLoadingState(btnId, outputId, true, 'Clarify Concept');
-            document.getElementById(outputId).classList.remove('hidden');
-
-
-            const systemPrompt = "You are a friendly AI tutor specializing in Web3 and decentralized AI. Provide a concise, single paragraph explanation of the user's concept, using simple, non-jargon language where possible. The response must be formatted as plain text only (no headings, lists, or markdown formatting).";
+        function setupInteractions() {
             
-            const userQuery = `Explain this concept: ${query}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }], // Use search for grounded definitions
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                }
-            };
-
-            try {
-                const result = await fetchGemini(GEMINI_MODEL + ':generateContent', payload);
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't find a clear explanation for that concept.";
-
-                const formattedText = text.replace(/\n/g, '<br>');
-
-                document.getElementById(outputId).innerHTML = formattedText;
-                
-            } catch (error) {
-                document.getElementById(outputId).innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
-            } finally {
-                setLoadingState(btnId, outputId, false, 'Clarify Concept');
-            }
-        }
-
-        // 2. Generate Use Cases (Brainstormer Tool)
-        async function handleGenerateUseCases() {
-            const input = document.getElementById('brainstorm-input');
-            const domain = input.value.trim();
-            const outputId = 'brainstorm-output';
-            const btnId = 'brainstorm-btn';
-
-            if (!domain) {
-                document.getElementById(outputId).classList.remove('hidden');
-                document.getElementById(outputId).innerHTML = '<p class="text-red-600">Please enter a domain (e.g., Finance, Education).</p>';
-                return;
-            }
-
-            setLoadingState(btnId, outputId, true, 'Generate Use Cases');
-            document.getElementById(outputId).classList.remove('hidden');
-
-            const systemPrompt = `You are a visionary Web3 and decentralized AI strategist. Given the user's domain, generate exactly 3 highly speculative and high-impact project ideas that the Gensyn Protocol (a decentralized, trustless AI compute network) could power. For each idea, briefly describe the use case and how Gensyn's decentralized verification is critical. Respond only with the three ideas as a numbered list.`;
-            
-            const userQuery = `Generate Gensyn use cases for the domain: ${domain}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                }
-            };
-
-            try {
-                const result = await fetchGemini(GEMINI_MODEL + ':generateContent', payload);
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate use cases for that domain.";
-                
-                document.getElementById(outputId).innerHTML = text.replace(/\n/g, '<br>');
-                
-            } catch (error) {
-                document.getElementById(outputId).innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
-            } finally {
-                setLoadingState(btnId, outputId, false, 'Generate Use Cases');
-            }
-        }
-
-        /* --- Existing DOM Logic --- */
-        
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // Attach event listeners for new LLM features
-            document.getElementById('clarify-btn').addEventListener('click', handleClarifyConcept);
-            document.getElementById('brainstorm-btn').addEventListener('click', handleGenerateUseCases);
-
-
-            /* --- Mobile Navigation Fix --- */
-            
+            /* --- Mobile Navigation & Smooth Scroll --- */
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
+            const sections = document.querySelectorAll('.content-section');
+            const header = document.getElementById('main-header');
             
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
             
-            const allNavLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
-            const sections = document.querySelectorAll('.content-section');
-            const header = document.getElementById('main-header');
-            
-            allNavLinks.forEach(link => {
+            navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href').substring(1);
@@ -637,12 +408,13 @@
 
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    if (window.scrollY >= sectionTop - headerHeight - 5) { 
+                    // Check if scroll is past the top of the section (minus header height)
+                    if (window.scrollY >= sectionTop - headerHeight - 10) { 
                         current = section.getAttribute('id');
                     }
                 });
 
-                allNavLinks.forEach(link => {
+                navLinks.forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href').includes(current)) {
                         link.classList.add('active');
@@ -663,14 +435,17 @@
                 if (target.tagName === 'BUTTON') {
                     const targetId = target.dataset.target;
                     
+                    // Reset all button states
                     Array.from(techToggles.children).forEach(btn => {
                         btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
                         btn.classList.add('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
                     });
                     
+                    // Activate clicked button
                     target.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
                     target.classList.remove('inactive', 'bg-white', 'text-neutral-700', 'hover:bg-neutral-100', 'border');
                     
+                    // Toggle panel visibility
                     techPanels.forEach(panel => {
                         if (panel.id === targetId) {
                             panel.classList.remove('hidden');
@@ -694,12 +469,14 @@
                     const isActive = item.classList.contains('active');
 
                     if (isActive) {
+                        // If active, deactivate and show initial panel
                         roleItems.forEach(i => i.classList.remove('active'));
                         roleDescriptionPanels.forEach(d => d.classList.remove('active'));
                         document.getElementById('desc-initial').classList.add('active');
                         return;
                     }
 
+                    // Otherwise, activate new item and show its panel
                     roleItems.forEach(i => i.classList.remove('active'));
                     roleDescriptionPanels.forEach(d => d.classList.remove('active'));
 
@@ -707,9 +484,10 @@
                     document.getElementById(targetDescId).classList.add('active');
                 });
             });
-        });
+        }
         
-        // CRITICAL FIX: Ensure charts initialize correctly after all scripts load
+        // Initialize general DOM interactions immediately, and charts on window load
+        document.addEventListener('DOMContentLoaded', setupInteractions);
         window.onload = initializeCharts;
     </script>
 </body>
