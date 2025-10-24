@@ -15,6 +15,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevents horizontal scroll on all devices */
         }
         .chart-container {
             position: relative;
@@ -59,10 +60,11 @@
             @apply border-blue-600 ring-2 ring-blue-300 shadow-md;
         }
         .role-description-panel {
-            @apply hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
+            display: none; /* Use display:none for JS control, simpler than Tailwind 'hidden' */
+            @apply mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-neutral-700;
         }
         .role-description-panel.active {
-            @apply block;
+            display: block;
         }
     </style>
 </head>
@@ -167,7 +169,7 @@
                 </div>
 
                 <div id="role-description-container" class="mt-6 bg-white p-6 rounded-lg shadow-lg border border-neutral-200">
-                    <div class="role-description-panel active" id="desc-initial">
+                    <div class="role-description-panel active" id="desc-initial" style="display: block;">
                         <p class="text-center font-medium text-neutral-600">Click on any role above to see a detailed description of its responsibilities and incentives within the Gensyn network.</p>
                     </div>
                     <div class="role-description-panel" id="desc-submitter">
@@ -199,19 +201,19 @@
             </div>
             <div class="bg-white p-6 rounded-lg shadow-lg border border-neutral-200 min-h-[150px]">
                 <div id="tech-content">
-                    <div id="tech-verde" class="tech-panel">
+                    <div id="tech-verde" class="tech-panel active">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">Verde: Trustless Verification Protocol</h4>
                         <p class="text-neutral-700">Verde enables **Probabilistic Proof-of-Learning (PoL)**. It is an arbitration system that uses a **Truebit-style incentive game** to verify the correctness of off-chain ML computation. Instead of forcing expensive, full re-execution, it scalably pinpoints the exact point of disagreement between a Solver and a Challenger, making verification orders of magnitude cheaper and faster.</p>
                     </div>
-                    <div id="tech-repops" class="tech-panel hidden">
+                    <div id="tech-repops" class="tech-panel">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">RepOps: Reproducible Operators Library</h4>
                         <p class="text-neutral-700">This low-level library solves the problem of **determinism** across heterogeneous hardware. By fixing the execution order of floating-point operations, RepOps ensures that the exact same machine learning task executed on two completely different GPUs (e.g., consumer vs. data center cards) produces the **exact same bit-for-bit output**. This reproducibility is non-negotiable for the **Verde** verification game to function reliably.</p>
                     </div>
-                    <div id="tech-judge" class="tech-panel hidden">
+                    <div id="tech-judge" class="tech-panel">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">Judge: Decentralized Execution Layer for RL</h4>
                         <p class="text-neutral-700">**Judge** is the specialized, cryptographically verifiable runtime engine for complex reinforcement learning (RL) workloads, integrated particularly within the **RL Swarm**. It acts as the decentralized execution and scheduling layer that allocates, manages, and validates RL agents across the distributed network, ensuring fairness and efficient resource utilization in multi-agent learning environments.</p>
                     </div>
-                    <div id="tech-comms" class="tech-panel hidden">
+                    <div id="tech-comms" class="tech-panel">
                         <h4 class="text-lg font-semibold text-blue-600 mb-2">NoLoCo & SkipPipe: Communication Protocols</h4>
                         <p class="text-neutral-700">These protocols optimize data transmission for distributed training. **NoLoCo** (No Local Coordination) replaces the heavy global synchronisation step in model training with a lightweight gossip method, enabling training over low-bandwidth, unreliable networks. **SkipPipe** is a pipeline parallel training method that significantly improves fault tolerance and reduces iteration time.</p>
                     </div>
@@ -254,4 +256,220 @@
                         <p class="text-neutral-600">A high-profile demonstration where a machine learning model is trained to complete tasks inside the game Minecraft. This experiment validates the protocol's ability to handle complex, real-time reinforcement learning environments across an open, untrusted cluster.</p>
                     </div>
                 </div>
-            <
+            </div>
+            
+            <div class="bg-blue-600 text-white p-8 rounded-lg shadow-xl text-center mt-8">
+                <h3 class="text-2xl font-bold mb-4">Join the Decentralized AI Revolution</h3>
+                <p class="text-blue-100 text-lg mb-6">
+                    The Testnet is the opportunity to contribute compute, test the protocol, and become an early participant in the Gensyn network.
+                </p>
+                <a href="https://docs.gensyn.ai/" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-neutral-100 transition-all duration-200">
+                    Explore Documentation
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-neutral-200 mt-16">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-neutral-500">
+            <p>This interactive report is based on Gensyn's public whitepapers and documentation. Not financial or investment advice.</p>
+        </div>
+    </footer>
+
+    <!-- All JavaScript is placed at the end of the body for optimal loading performance -->
+    <script>
+        
+        /* --- Chart.js Initialization --- */
+        
+        function initializeCharts() {
+            // Cost Comparison Bar Chart
+            const costCtx = document.getElementById('costChart');
+            if (costCtx) {
+                new Chart(costCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Centralized Cloud (Monopoly)', 'Gensyn Protocol (Open Market)'],
+                        datasets: [{
+                            label: 'Relative Cost of AI Training',
+                            data: [100, 25], 
+                            backgroundColor: [
+                                'rgba(220, 38, 38, 0.6)',
+                                'rgba(37, 99, 235, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(220, 38, 38, 1)',
+                                'rgba(37, 99, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Relative Cost Index (%)'
+                                },
+                                ticks: {
+                                    callback: function(value) { return value + '%' }
+                                },
+                                max: 120 
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        /* --- General Interaction Logic --- */
+
+        function setupInteractions() {
+            
+            /* --- Mobile Navigation & Smooth Scroll --- */
+            
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
+            const sections = document.querySelectorAll('.content-section');
+            const header = document.getElementById('main-header');
+            
+            // Mobile Menu Toggle
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Smooth Scroll Logic
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        const headerHeight = header.offsetHeight;
+                        const targetPosition = targetElement.offsetTop - headerHeight; 
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                    // Close mobile menu after click
+                    if (!mobileMenu.classList.contains('hidden')) { 
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Active Link Highlighting
+            function updateActiveLink() {
+                const headerHeight = header.offsetHeight;
+                let current = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Offset check slightly below the header
+                    if (window.scrollY >= sectionTop - headerHeight - 10) { 
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink(); 
+
+            /* --- Core Technologies Toggles Logic (FIXED) --- */
+
+            const techToggles = document.getElementById('tech-toggles');
+            const techPanels = document.querySelectorAll('#tech-content .tech-panel');
+            
+            techToggles.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.tagName === 'BUTTON') {
+                    const targetId = target.dataset.target;
+                    
+                    // Reset all button states
+                    techToggles.querySelectorAll('.tech-toggle').forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.add('inactive');
+                    });
+                    
+                    // Activate clicked button
+                    target.classList.add('active');
+                    target.classList.remove('inactive');
+                    
+                    // Reset all panel states and display only the target panel
+                    techPanels.forEach(panel => {
+                        panel.style.display = 'none'; // Use direct style manipulation for robustness
+                    });
+                    
+                    const targetPanel = document.getElementById(targetId);
+                    if(targetPanel) {
+                        targetPanel.style.display = 'block'; 
+                    }
+                }
+            });
+            
+            // Initialize Core Tech Panel visibility (only the first one)
+            techPanels.forEach((panel, index) => {
+                panel.style.display = (index === 0) ? 'block' : 'none';
+            });
+            
+            /* --- Participant Workflow Logic (FIXED) --- */
+
+            const roleItems = document.querySelectorAll('.role-diagram-item');
+            const roleDescriptionPanels = document.querySelectorAll('.role-description-panel');
+
+            roleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetRole = item.id.split('-')[1]; 
+                    const targetDescId = 'desc-' + targetRole; 
+                    
+                    // Check if the same item was clicked to toggle off
+                    const isActive = item.classList.contains('active');
+
+                    // Reset all
+                    roleItems.forEach(i => i.classList.remove('active'));
+                    roleDescriptionPanels.forEach(d => d.style.display = 'none');
+                    
+                    // Toggle Logic
+                    if (!isActive) {
+                        // Activate new item
+                        item.classList.add('active');
+                        document.getElementById(targetDescId).style.display = 'block';
+                    } else {
+                        // Revert to initial state
+                        document.getElementById('desc-initial').style.display = 'block';
+                    }
+                });
+            });
+            // Ensure initial description is displayed
+            document.getElementById('desc-initial').style.display = 'block';
+        }
+
+        // CRITICAL FIX: Ensure charts and all interactions run ONLY after the entire DOM is loaded.
+        window.onload = function() {
+            initializeCharts();
+            setupInteractions();
+        };
+
+    </script>
+</body>
+</html>
